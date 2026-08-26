@@ -50,24 +50,6 @@
   .brand h1{font-size:22px;letter-spacing:2px;font-weight:700}
   .motto{font-size:13px;opacity:.85;letter-spacing:4px;margin-top:4px}
 
-  .searchbox{flex:1;min-width:280px;max-width:480px;position:relative}
-  .searchbox input{
-    width:100%;
-    padding:13px 18px 13px 46px;
-    border:none;border-radius:999px;
-    font-size:15px;color:var(--ink);
-    background:rgba(255,255,255,.96);
-    outline:none;
-    box-shadow:0 4px 14px rgba(0,0,0,.18);
-  }
-  .searchbox input:focus{box-shadow:0 0 0 3px rgba(255,255,255,.35),0 4px 14px rgba(0,0,0,.18)}
-  .search-icon{
-    position:absolute;left:16px;top:50%;
-    transform:translateY(-50%);
-    color:var(--green-mid);
-    display:flex;pointer-events:none;
-  }
-
   .hero{
     background:
       radial-gradient(circle at 12% 0%, rgba(255,255,255,.10) 0 1px, transparent 2px),
@@ -171,7 +153,6 @@
 
   @media (max-width:640px){
     .header-inner{flex-direction:column;align-items:stretch}
-    .searchbox{max-width:none}
     .stats{font-size:12px}
   }
 </style>
@@ -194,14 +175,6 @@
         <h1 id="siteTitle">华中农业大学 · 学习笔记</h1>
         <p class="motto">勤读力耕 立己达人</p>
       </div>
-    </div>
-    <div class="searchbox">
-      <span class="search-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-          <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
-        </svg>
-      </span>
-      <input id="searchInput" type="search" placeholder="搜索标题、标签或正文内容…" autocomplete="off">
     </div>
   </div>
   <div class="hero">知识 · 笔记 · 思考</div>
@@ -244,7 +217,6 @@
   var DATA_FILE = 'notes.json';
   var REFRESH_MS = 5 * 60 * 1000;
 
-  var searchInput = document.getElementById('searchInput');
   var grid = document.getElementById('grid');
   var statsEl = document.getElementById('stats');
   var tagbar = document.getElementById('tagbar');
@@ -315,10 +287,7 @@
   }
 
   function filteredNotes() {
-    var kw = searchInput.value.trim().toLowerCase();
     return allNotes.filter(function (n) {
-      var hay = [n.title, n.summary, n.content, (n.tags || []).join(' ')].join(' ').toLowerCase();
-      if (kw && hay.indexOf(kw) === -1) return false;
       if (activeTag && (n.tags || []).indexOf(activeTag) === -1) return false;
       return true;
     });
@@ -335,9 +304,7 @@
     grid.innerHTML = '';
     if (!list.length) {
       emptyEl.classList.remove('hidden');
-      emptyEl.textContent = (activeTag || searchInput.value.trim())
-        ? '没有找到匹配的笔记，换个关键词试试～'
-        : '还没有笔记，请先在 notes.json 中添加。';
+      emptyEl.textContent = '还没有笔记，请先在 notes.json 中添加。';
       return;
     }
     emptyEl.classList.add('hidden');
@@ -374,7 +341,6 @@
     document.body.style.overflow = '';
   }
 
-  searchInput.addEventListener('input', render);
   document.getElementById('modalClose').onclick = closeModal;
   modalMask.addEventListener('click', function (e) { if (e.target === modalMask) closeModal(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
