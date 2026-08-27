@@ -1,82 +1,39 @@
-# 华中农业大学 · 学习笔记
+# 研究生夏令营 · 学习笔记网站
 
-一个基于 GitHub Pages 托管的静态学习笔记网站，使用纯 HTML/CSS/JavaScript，无任何构建步骤。
+一个纯 HTML + JSON 的静态网站，记录夏令营（微生物分离与鉴定 / 微生物组数据分析 / 人工智能应用）的学习内容，可直接托管到 GitHub Pages，零成本、免费。
 
-## 在线访问
+## 文件说明
 
-部署后访问地址：`https://<你的用户名>.github.io/<仓库名>/`
+- `index.html`：网站本体（样式、搜索、阅读弹窗、自动更新逻辑都在里面）
+- `notes.json`：你的笔记数据，**以后写笔记只改这个文件**
+- `README.md`：本说明
 
-## 功能特性
+## 部署步骤
 
-- 搜索：按标题、标签、正文内容模糊搜索
-- 标签筛选：点击标签快速过滤笔记
-- 阅读弹窗：点击卡片查看笔记全文
-- 自动刷新：每 5 分钟自动检查 `notes.json` 更新
+1. 在 GitHub 新建一个仓库（Public 免费托管）。
+2. 把 `index.html` 和 `notes.json` 上传到仓库根目录。
+3. 仓库 `Settings` → `Pages` → Source 选 `main` 分支 `/root` → 保存。
+4. 等 1~2 分钟，访问 `https://你的用户名.github.io/仓库名/`。
 
-## 项目结构
+## 如何添加 / 更新笔记
 
-```
-├── index.html   # 网站主页面（含全部样式与逻辑）
-├── notes.json   # 笔记数据（所有内容都写在这里）
-└── README.md
-```
-
-## 如何更新笔记
-
-所有内容都存放在 `notes.json` 中，数据结构如下：
+编辑 `notes.json`，在 `notes` 数组里按同样格式添加一条即可：
 
 ```json
 {
-  "title": "站点标题",
-  "subtitle": "副标题（页首横幅文字）",
-  "updated": "2026-08-27",
-  "notes": [
-    {
-      "title": "笔记标题",
-      "date": "2026-08-25",
-      "tags": ["标签1", "标签2"],
-      "summary": "卡片上显示的简介",
-      "content": "正文内容，支持换行"
-    }
-  ]
+  "title": "笔记标题",
+  "date": "2026-08-27",
+  "tags": ["标签1", "标签2"],
+  "summary": "卡片上显示的一两句话简介",
+  "content": "点击卡片后显示的完整正文，\n可以用换行分段。"
 }
 ```
 
-修改 `notes.json` 后执行以下命令提交推送即可，网站会自动生效：
-
-```bash
-git add notes.json
-git commit -m "更新笔记"
-git push
-```
+推送后网站会自动读取最新的 `notes.json`（每 5 分钟自动检查一次，也可点“刷新”立即更新），无需重新部署。
 
 ## 本地预览
 
-由于浏览器 `fetch` 读取本地 JSON 有跨域限制，建议用本地服务器预览：
+直接双击 `index.html` 可能因浏览器安全策略无法读取 `notes.json`，推荐任选一种：
 
-```bash
-# Python 3
-python -m http.server 8000
-```
-
-然后浏览器打开 `http://localhost:8000`
-
-## 部署步骤（首次）
-
-1. 在 GitHub 新建一个仓库（建议 Public）。
-2. 将本目录文件推送到仓库：
-   ```bash
-   git init
-   git add .
-   git commit -m "initial commit"
-   git branch -M main
-   git remote add origin https://github.com/<你的用户名>/<仓库名>.git
-   git push -u origin main
-   ```
-3. 进入仓库 `Settings → Pages`，Source 选择 `Deploy from a branch`，Branch 选择 `main`，目录 `/ (root)`，点击 Save。
-4. 等待 1-2 分钟后访问页面即可。
-
-## 说明
-
-- 网站是纯静态页面，无需后端，适合个人学习笔记展示。
-- 若笔记较多，建议先本地用脚本校验 `notes.json` 的 JSON 格式后再推送。
+- 安装 VS Code 的 Live Server 插件，右键 `index.html` → Open with Live Server
+- 或在文件夹里运行 `python -m http.server 8000`，然后访问 http://localhost:8000

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>华中农业大学 · 学习笔记</title>
+<title>研究生夏令营 · 学习笔记</title>
 <style>
   :root{
     --green:#128a47;
@@ -49,6 +49,24 @@
   }
   .brand h1{font-size:22px;letter-spacing:2px;font-weight:700}
   .motto{font-size:13px;opacity:.85;letter-spacing:4px;margin-top:4px}
+
+  .searchbox{flex:1;min-width:280px;max-width:480px;position:relative}
+  .searchbox input{
+    width:100%;
+    padding:13px 18px 13px 46px;
+    border:none;border-radius:999px;
+    font-size:15px;color:var(--ink);
+    background:rgba(255,255,255,.96);
+    outline:none;
+    box-shadow:0 4px 14px rgba(0,0,0,.18);
+  }
+  .searchbox input:focus{box-shadow:0 0 0 3px rgba(255,255,255,.35),0 4px 14px rgba(0,0,0,.18)}
+  .search-icon{
+    position:absolute;left:16px;top:50%;
+    transform:translateY(-50%);
+    color:var(--green-mid);
+    display:flex;pointer-events:none;
+  }
 
   .hero{
     background:
@@ -149,11 +167,65 @@
     display:flex;gap:10px;align-items:center;flex-wrap:wrap;
     margin-bottom:16px;padding-bottom:14px;border-bottom:1px dashed #dceadf;
   }
-  .modal-body{font-size:15px;line-height:2;color:#2c4234;white-space:pre-wrap;word-break:break-word}
-  .modal-mask.hidden{display:none}
+  .modal-body{font-size:15px;line-height:2;color:#2c4234;word-break:break-word}
+
+  /* ---------- 正文里的 Markdown 渲染 ---------- */
+  .modal-body h2{font-size:18px;color:#143a24;margin:22px 0 10px;line-height:1.6}
+  .modal-body h3{font-size:16px;color:#143a24;margin:18px 0 8px}
+  .modal-body h4{font-size:15px;color:#1d4a32;margin:16px 0 6px}
+  .modal-body p{margin:8px 0}
+  .modal-body blockquote{
+    margin:10px 0;padding:8px 14px;border-left:4px solid var(--green-mid);
+    background:var(--green-light);border-radius:0 8px 8px 0;color:#3d5c49;
+  }
+  .modal-body code{
+    background:#eef3ef;border:1px solid #dceadf;border-radius:4px;
+    padding:1px 6px;font-family:Consolas,Menlo,monospace;font-size:13px;color:#0e6b37;
+  }
+  .modal-body pre.code{
+    background:#10281b;color:#d7f2df;padding:14px;border-radius:10px;
+    overflow-x:auto;font-size:13px;line-height:1.6;margin:12px 0;
+  }
+  .modal-body pre.code code{background:none;border:none;color:inherit;padding:0}
+  .modal-body table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px}
+  .modal-body th,.modal-body td{border:1px solid #dceadf;padding:7px 10px;text-align:left;vertical-align:top;line-height:1.6}
+  .modal-body th{background:var(--green-light);color:#143a24;font-weight:600}
+  .modal-body .li{padding:3px 0 3px 18px;position:relative;line-height:1.9}
+  .modal-body .li::before{content:"•";position:absolute;left:4px;color:var(--green-mid)}
+  .modal-body .ol-no{color:var(--green-mid);font-weight:600;margin-right:2px}
+  .modal-body .todo-item{padding:3px 0;line-height:1.9;display:flex;align-items:center;gap:8px}
+  .modal-body .todo-item input{margin:0;flex:0 0 auto}
+  .modal-body .todo-item.done{color:var(--muted);text-decoration:line-through}
+  .modal-body strong{color:#143a24}
+  .modal-body a{color:var(--green-mid)}
+  .modal-body hr{border:none;border-top:1px dashed #dceadf;margin:16px 0}
+
+  /* ---------- 音乐播放器 ---------- */
+  .music-wrap{
+    position:fixed;right:16px;bottom:16px;z-index:40;
+    width:350px;background:#fff;border:1px solid #cfe3d4;border-radius:14px;
+    box-shadow:0 12px 34px rgba(14,107,55,.28);overflow:hidden;
+  }
+  .music-head{
+    display:flex;align-items:center;gap:8px;
+    padding:9px 12px;
+    background:linear-gradient(155deg,#0e6b37,#128a47);color:#fff;
+    cursor:pointer;user-select:none;
+  }
+  .music-note{font-size:16px;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+  .music-name{flex:1;font-size:13.5px;letter-spacing:.5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .music-toggle{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.45);color:#fff;border-radius:999px;padding:3px 11px;font-size:12px;cursor:pointer}
+  .music-toggle:hover{background:rgba(255,255,255,.3)}
+  .music-body iframe{width:100%;height:197px;display:block;border:none;background:#000}
+  .music-body.collapsed{display:none}
+  .music-tip{padding:6px 12px;font-size:11px;color:var(--muted);background:#f6faf7;border-top:1px dashed #dceadf}
+  .music-tip a{color:var(--green-mid)}
+  @media (max-width:640px){.music-wrap{width:calc(100% - 24px)}}
 
   @media (max-width:640px){
     .header-inner{flex-direction:column;align-items:stretch}
+    .searchbox{max-width:none}
     .stats{font-size:12px}
   }
 </style>
@@ -173,12 +245,20 @@
         </svg>
       </div>
       <div>
-        <h1 id="siteTitle">华中农业大学 · 学习笔记</h1>
-        <p class="motto">勤读力耕 立己达人</p>
+        <h1 id="siteTitle">研究生夏令营 · 学习笔记</h1>
+        <p class="motto">探索微生物 · 驾驭数据 · 拥抱 AI</p>
       </div>
     </div>
+    <div class="searchbox">
+      <span class="search-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
+        </svg>
+      </span>
+      <input id="searchInput" type="search" placeholder="搜索标题、标签或正文内容…" autocomplete="off">
+    </div>
   </div>
-  <div class="hero">知识 · 笔记 · 思考</div>
+  <div class="hero">微生物 · 数据 · 人工智能</div>
 </header>
 
 <main class="container">
@@ -196,7 +276,7 @@
 </main>
 
 <footer>
-  华中农业大学 · 勤读力耕，立己达人<br>
+  研究生夏令营（8/18 – 8/30）· 资源环境学院 · 微生物 · 数据 · 人工智能<br>
   内容来自同目录下的 notes.json，更新后推送即可自动生效
 </footer>
 
@@ -212,12 +292,26 @@
   </div>
 </div>
 
+<div class="music-wrap" id="musicWrap">
+  <div class="music-head" id="musicHead" title="展开 / 收起音乐播放器">
+    <span class="music-note">♪</span>
+    <span class="music-name">Be What You Wanna Be</span>
+    <button class="music-toggle" id="musicToggle" type="button">收起</button>
+  </div>
+  <div class="music-body" id="musicBody">
+    <iframe src="https://player.bilibili.com/player.html?bvid=BV1qqFdzvELb&page=1&high_quality=1&danmaku=0&autoplay=0"
+      scrolling="no" frameborder="no" framespacing="0" allowfullscreen="true" referrerpolicy="no-referrer"></iframe>
+    <div class="music-tip">若无法播放，可到 <a href="https://search.bilibili.com/video?keyword=Be%20What%20You%20Wanna%20Be" target="_blank" rel="noopener">B 站搜索《Be What You Wanna Be》</a></div>
+  </div>
+</div>
+
 <script>
   'use strict';
 
   var DATA_FILE = 'notes.json';
   var REFRESH_MS = 5 * 60 * 1000;
 
+  var searchInput = document.getElementById('searchInput');
   var grid = document.getElementById('grid');
   var statsEl = document.getElementById('stats');
   var tagbar = document.getElementById('tagbar');
@@ -233,6 +327,117 @@
     return String(s).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
+  }
+
+  /* ---------- 简单 Markdown 渲染 ---------- */
+  function mdInline(s) {
+    s = esc(s);
+    s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+    return s;
+  }
+
+  function renderMarkdown(src) {
+    var lines = String(src).replace(/\r\n/g, '\n').split('\n');
+    var html = '';
+    var i = 0;
+    var inCode = false;
+    var codeBuf = [];
+
+    function closeBlock() {
+      if (inCode) {
+        html += '<pre class="code"><code>' + esc(codeBuf.join('\n')) + '</code></pre>';
+        codeBuf = [];
+        inCode = false;
+      }
+    }
+    function isSepRow(row) {
+      if (!row.length) return false;
+      return row.every(function (c) { return /^:?-{2,}:?$/.test(c); });
+    }
+
+    while (i < lines.length) {
+      var raw = lines[i];
+      var line = raw.trim();
+
+      if (/^```/.test(line)) {
+        if (inCode) { closeBlock(); } else { inCode = true; }
+        i++; continue;
+      }
+      if (inCode) { codeBuf.push(raw); i++; continue; }
+      if (!line) { i++; continue; }
+
+      if (/^-{3,}$/.test(line)) { closeBlock(); html += '<hr>'; i++; continue; }
+
+      var hm = line.match(/^(#{1,6})\s+(.*)$/);
+      if (hm) {
+        closeBlock();
+        var lvl = Math.min(hm[1].length, 6);
+        html += '<h' + lvl + '>' + mdInline(hm[2]) + '</h' + lvl + '>';
+        i++; continue;
+      }
+
+      if (line.charAt(0) === '>') {
+        closeBlock();
+        html += '<blockquote>' + mdInline(line.replace(/^>\s?/, '')) + '</blockquote>';
+        i++; continue;
+      }
+
+      if (line.charAt(0) === '|') {
+        closeBlock();
+        var rows = [];
+        while (i < lines.length && lines[i].trim().charAt(0) === '|') {
+          rows.push(lines[i].trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map(function (c) { return c.trim(); }));
+          i++;
+        }
+        var out = '<table>';
+        if (rows.length > 1 && isSepRow(rows[1])) {
+          out += '<thead><tr>' + rows[0].map(function (c) { return '<th>' + mdInline(c) + '</th>'; }).join('') + '</tr></thead><tbody>';
+          for (var r = 2; r < rows.length; r++) {
+            out += '<tr>' + rows[r].map(function (c) { return '<td>' + mdInline(c) + '</td>'; }).join('') + '</tr>';
+          }
+          out += '</tbody>';
+        } else {
+          out += '<tbody>';
+          rows.forEach(function (r) {
+            out += '<tr>' + r.map(function (c) { return '<td>' + mdInline(c) + '</td>'; }).join('') + '</tr>';
+          });
+          out += '</tbody>';
+        }
+        out += '</table>';
+        html += out;
+        continue;
+      }
+
+      var task = line.match(/^[-*]\s+\[([ xX])\]\s+(.*)$/);
+      if (task) {
+        closeBlock();
+        var checked = /[xX]/.test(task[1]);
+        html += '<div class="todo-item' + (checked ? ' done' : '') + '"><input type="checkbox" disabled' + (checked ? ' checked' : '') + '> <span>' + mdInline(task[2]) + '</span></div>';
+        i++; continue;
+      }
+
+      var li = line.match(/^([-*])\s+(.*)$/);
+      if (li) {
+        closeBlock();
+        html += '<div class="li">' + mdInline(li[2]) + '</div>';
+        i++; continue;
+      }
+
+      var oli = line.match(/^(\d+)[.、]\s+(.*)$/);
+      if (oli) {
+        closeBlock();
+        html += '<div class="li"><span class="ol-no">' + oli[1] + '.</span> ' + mdInline(oli[2]) + '</div>';
+        i++; continue;
+      }
+
+      closeBlock();
+      html += '<p>' + mdInline(line) + '</p>';
+      i++;
+    }
+    closeBlock();
+    return html;
   }
 
   function showNotice(msg) { noticeEl.textContent = msg; noticeEl.classList.remove('hidden'); }
@@ -288,7 +493,10 @@
   }
 
   function filteredNotes() {
+    var kw = searchInput.value.trim().toLowerCase();
     return allNotes.filter(function (n) {
+      var hay = [n.title, n.summary, n.content, (n.tags || []).join(' ')].join(' ').toLowerCase();
+      if (kw && hay.indexOf(kw) === -1) return false;
       if (activeTag && (n.tags || []).indexOf(activeTag) === -1) return false;
       return true;
     });
@@ -305,7 +513,9 @@
     grid.innerHTML = '';
     if (!list.length) {
       emptyEl.classList.remove('hidden');
-      emptyEl.textContent = '还没有笔记，请先在 notes.json 中添加。';
+      emptyEl.textContent = (activeTag || searchInput.value.trim())
+        ? '没有找到匹配的笔记，换个关键词试试～'
+        : '还没有笔记，请先在 notes.json 中添加。';
       return;
     }
     emptyEl.classList.add('hidden');
@@ -332,7 +542,7 @@
     document.getElementById('mTags').innerHTML = (n.tags || []).map(function (t) {
       return '<span class="mini-tag">' + esc(t) + '</span>';
     }).join('');
-    document.getElementById('mBody').textContent = n.content || '';
+    document.getElementById('mBody').innerHTML = renderMarkdown(n.content || '');
     modalMask.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
   }
@@ -342,10 +552,18 @@
     document.body.style.overflow = '';
   }
 
+  searchInput.addEventListener('input', render);
   document.getElementById('modalClose').onclick = closeModal;
   modalMask.addEventListener('click', function (e) { if (e.target === modalMask) closeModal(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
   document.getElementById('refreshBtn').onclick = loadNotes;
+
+  /* ---------- 音乐播放器 ---------- */
+  var musicBody = document.getElementById('musicBody');
+  document.getElementById('musicHead').addEventListener('click', function () {
+    musicBody.classList.toggle('collapsed');
+    document.getElementById('musicToggle').textContent = musicBody.classList.contains('collapsed') ? '播放' : '收起';
+  });
 
   loadNotes();
   setInterval(loadNotes, REFRESH_MS);
